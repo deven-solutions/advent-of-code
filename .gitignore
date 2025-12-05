@@ -1,0 +1,9 @@
+# The AdventOfCode creator does not want you to share your personal input file publicly
+input.txt
+
+node_modules
+package-lock.json
+dist
+
+.idea/
+.DS_Store

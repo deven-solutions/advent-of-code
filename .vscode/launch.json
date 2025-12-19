@@ -64,6 +64,22 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Day 7",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "solve-day",
+        "7"
+      ],
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
 }

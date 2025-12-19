@@ -16,20 +16,20 @@ function readInput(file_path: string): Data {
 }
 
 class Range {
-  max: number = 0;
-  min: number = 0;
+  max: bigint = BigInt(0);
+  min: bigint = BigInt(0);
 
-  constructor(aMin: number, aMax: number) {
+  constructor(aMin: bigint, aMax: bigint) {
     this.min = aMin;
     this.max = aMax;
   }
 
-  inRange(aNumber: number): boolean {
+  inRange(aNumber: bigint): boolean {
     return aNumber >= this.min && aNumber <= this.max;
   }
 
-  getIdCount(): number {
-    return this.max + 1 - this.min;
+  getIdCount(): bigint {
+    return (this.max + BigInt(1) - this.min);
   }
 
   equals(range: Range): boolean {
@@ -56,10 +56,10 @@ function part1(file_path: string) {
     } else if (isProcessingRanges) {
       // Save ranges
       const range: string[] = element.split('-');
-      ranges.push(new Range(Number.parseInt(range[0]), Number.parseInt(range[1])));
+      ranges.push(new Range(BigInt(range[0]), BigInt(range[1])));
     } else {
       // Process numbers against the ranges to check if they are fresh
-      if (!ranges.every(range => !range.inRange(Number.parseInt(element)))) {
+      if (!ranges.every(range => !range.inRange(BigInt(element)))) {
         freshCount++;
       }
     }
@@ -79,7 +79,7 @@ function part2(file_path: string) {
       break;
     } else {
       const rangeString: string[] = element.split('-');
-      const range: Range = new Range(Number.parseInt(rangeString[0]), Number.parseInt(rangeString[1]));
+      const range: Range = new Range(BigInt(rangeString[0]), BigInt(rangeString[1]));
       console.log(range.toString());
       ranges.push(range);
     }
@@ -101,14 +101,14 @@ function part2(file_path: string) {
     }
   }
 
-  let idCount = 0;
+  let idCount = BigInt(0);
 
   nonDuplicateRanges.forEach(range => {
     idCount += range.getIdCount();
     console.log(range.toString());
   });
 
-  return idCount;
+  return idCount.toString();
 }
 
 export default <Puzzle> {
@@ -125,7 +125,7 @@ export default <Puzzle> {
   part2_tests: [
     {
       input_file_path: path.join(__dirname, 'input_test_2.txt'),
-      expected_output: 11921101472165,
+      expected_output: 46,
       extra_args: [],
     },
   ],
@@ -146,8 +146,10 @@ function extendRanges(ranges: Range[], nonDuplicateRanges: Range[]): boolean {
         continue;
       }
       if (ranges[j].inRange(range.min) || ranges[j].inRange(range.max)) {
-        const min: number = Math.min(range.min, ranges[j].min);
-        const max: number = Math.max(range.max, ranges[j].max);
+        const bigIntMax = (...args: bigint[]) => args.reduce((m, e) => e > m ? e : m);
+        const bigIntMin = (...args: bigint[]) => args.reduce((m, e) => e < m ? e : m);
+        const min: bigint = bigIntMin(range.min, ranges[j].min);
+        const max: bigint = bigIntMax(range.max, ranges[j].max);
         const newRange = new Range(min, max);
         if (nonDuplicateRanges.every(r => {
           return !r.equals(newRange);
